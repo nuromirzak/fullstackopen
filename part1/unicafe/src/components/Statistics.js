@@ -17,13 +17,26 @@ const StatisticsBlock = (props) => {
 
   return (
     <>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
 
-      <p>all {getCount([good, neutral, bad])}</p>
-      <p>average {getAverage([good, neutral, bad])}</p>
-      <p>positive {getPositive([good, neutral, bad])} %</p>
+      <StatisticLine text="all" value={getCount([good, neutral, bad])} />
+      <StatisticLine text="average" value={getAverage([good, neutral, bad])} />
+
+      <StatisticLine text="positive" value={getPositive([good, neutral, bad]) + " %"} />
+    </>
+  );
+};
+
+const StatisticLine = (props) => {
+  const { text, value } = props;
+
+  return (
+    <>
+      <p>
+        {text} {value}
+      </p>
     </>
   );
 };
