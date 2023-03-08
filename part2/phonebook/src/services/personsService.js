@@ -11,7 +11,8 @@ const getAll = () => {
 };
 
 const update = (id, newObject) => {
-    // TODO
+    const promise = axios.put(`http://localhost:3001/persons/${id}`, newObject);
+    return promise.then(response => response.data);
 };
 
 const deletePhoneNumber = id => {

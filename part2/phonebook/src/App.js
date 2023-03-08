@@ -27,7 +27,26 @@ const App = () => {
     event.preventDefault();
 
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      console.log("updating the existing phone number");
+
+      const person = persons.find((person) => person.name === newName);
+
+      const updatedPerson = { ...person, number: newNumber };
+    
+
+      personsService
+        .update(person.id, updatedPerson)
+        .then((returnedPerson) => {
+          console.log("promise fulfilled", returnedPerson);
+          setPersons(
+            persons.map((person) =>
+              person.name !== newName ? person : returnedPerson
+            )
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       return;
     }
 
@@ -92,7 +111,11 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
 
-      <Persons persons={persons} currentFilter={currentFilter} askToDelete={askToDelete} />
+      <Persons
+        persons={persons}
+        currentFilter={currentFilter}
+        askToDelete={askToDelete}
+      />
     </div>
   );
 };
