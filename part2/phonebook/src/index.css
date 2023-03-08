@@ -1,0 +1,17 @@
+.notification {
+  border: 1px solid black;
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.danger {
+  background-color: #f44336;
+  color: white;
+}
