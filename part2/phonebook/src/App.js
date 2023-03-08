@@ -6,7 +6,7 @@ import personsService from "./services/personsService";
 import Notification from "./components/Notification";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState(null);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
@@ -119,6 +119,10 @@ const App = () => {
         console.log(error);
       });
   }, []);
+
+  if (persons === null) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
