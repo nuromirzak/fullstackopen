@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import CountryInfo from "./components/CountryInfo";
+import CountryList from "./components/CountryList";
 
 function App() {
   const [countryName, setCountryName] = useState("");
@@ -40,7 +40,7 @@ function App() {
         <input value={countryName} onChange={handleCountryNameChange} />
       </div>
 
-      <CountryInfo countries={currentCountries} />
+      <CountryList countries={currentCountries} />
     </div>
   );
 }
