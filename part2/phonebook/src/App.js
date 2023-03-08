@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
+import personsService from "./services/personsService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -36,18 +36,42 @@ const App = () => {
       number: newNumber,
     };
 
-    setPersons(persons.concat(personObject));
+    personsService
+      .addPhoneNumber(personObject)
+      .then((returnedPerson) => {
+        console.log("promise fulfilled", returnedPerson);
+        setPersons(persons.concat(returnedPerson));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     setNewNumber("");
     setNewName("");
   };
 
+  const askToDelete = (name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      const person = persons.find((person) => person.name === name);
+
+      personsService
+        .deletePhoneNumber(person.id)
+        .then((response) => {
+          console.log("promise fulfilled", response);
+          setPersons(persons.filter((person) => person.name !== name));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        console.log("promise fulfilled", response.data);
-        setPersons(response.data);
+    personsService
+      .getAll()
+      .then((initialPersons) => {
+        console.log("promise fulfilled", initialPersons);
+        setPersons(initialPersons);
       })
       .catch((error) => {
         console.log(error);
@@ -68,7 +92,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
 
-      <Persons persons={persons} currentFilter={currentFilter} />
+      <Persons persons={persons} currentFilter={currentFilter} askToDelete={askToDelete} />
     </div>
   );
 };
