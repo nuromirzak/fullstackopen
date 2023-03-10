@@ -2,6 +2,7 @@ const moongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const blogs = require("./default_blogs");
+const mongo_helper = require("../utils/mongo_helper");
 
 const api = supertest(app);
 
@@ -91,6 +92,53 @@ describe("if the title or url properties are missing from the request data, retu
     };
 
     await api.post("/api/blogs").send(newBlog).expect(400);
+  });
+});
+
+describe("testing deleting functionality", () => {
+  test("delete a blog with a valid id", async () => {
+    const blogsBefore = await api.get("/api/blogs");
+
+    const blogToDelete = blogsBefore.body[0];
+
+    await api
+      .delete(`/api/blogs/${blogToDelete._id}`)
+      .expect(200)
+      .expect(`Deleted blog with id ${blogToDelete._id}`);
+
+    const blogsAfter = await api.get("/api/blogs");
+
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length - 1);
+  });
+
+  test("delete a blog with an invalid id", async () => {
+    const blogsBefore = await api.get("/api/blogs");
+
+    const malformattedId = "it_is_not_a_valid_id";
+
+    await api
+      .delete(`/api/blogs/${malformattedId}`)
+      .expect(400)
+      .expect({ error: "malformatted id" });
+
+    const blogsAfter = await api.get("/api/blogs");
+
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
+  });
+
+  test("delete a blog with a valid id but not present in the database", async () => {
+    const blogsBefore = await api.get("/api/blogs");
+
+    const id = mongo_helper.randomObjectId();
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(404)
+      .expect({ error: "blog not found" });
+
+    const blogsAfter = await api.get("/api/blogs");
+
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
   });
 });
 
