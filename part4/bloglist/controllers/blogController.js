@@ -1,6 +1,7 @@
 const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
 const mongo_helper = require("../utils/mongo_helper");
+const default_blogs = require("../tests/default_blogs");
 
 blogRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({});
@@ -75,6 +76,17 @@ blogRouter.delete("/:id", async (request, response) => {
   }
 
   response.send(`Deleted blog with id ${id}`);
+});
+
+blogRouter.get("/init", async (request, response) => {
+  await Blog.deleteMany({});
+
+  for (let blog of default_blogs) {
+    const newBlog = new Blog(blog);
+    await newBlog.save();
+  }
+
+  response.send("Initialized blogs");
 });
 
 module.exports = blogRouter;
