@@ -7,8 +7,10 @@ require("express-async-errors");
 const blogRouter = require("./controllers/blogController");
 const userRouter = require("./controllers/userController");
 const loginRouter = require("./controllers/loginController");
+const configRouter = require("./controllers/configController");
 const mongoose = require("mongoose");
 const middleware = require("./utils/middleware");
+const test_helper = require("./tests/test_helpers");
 
 console.log("connecting to", config.MONGODB_URI);
 
@@ -35,6 +37,11 @@ app.use(middleware.userExtractor);
 app.use("/api/blogs", blogRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
+app.use("/config", configRouter);
+app.get("/init", async (request, response) => {
+  await test_helper.init();
+  response.send("Successfully initialized database");
+});
 
 app.use(middleware.errorHandler);
 

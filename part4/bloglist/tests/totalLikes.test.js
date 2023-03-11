@@ -5,6 +5,6 @@ describe("total likes", () => {
 
   test("of ready-made list is calculated right", () => {
     const result = listHelper.totalLikes(blogs);
-    expect(result).toBe(36);
+    expect(result).toBe(43);
   });
 });

@@ -3,29 +3,12 @@ const supertest = require("supertest");
 const app = require("../app");
 const blogs = require("./default_blogs");
 const mongo_helper = require("../utils/mongo_helper");
+const test_helpers = require("./test_helpers");
 
 const api = supertest(app);
 
-const Blog = require("../models/blog");
-
-async function getLengthOfBlogs() {
-  const response = await api.get("/api/blogs");
-
-  return response.body.length;
-}
-
-async function initDatabase() {
-  await Blog.deleteMany({});
-
-  for (let blog of blogs) {
-    let blogObject = new Blog(blog);
-
-    await blogObject.save();
-  }
-}
-
 beforeEach(async () => {
-  await initDatabase();
+  await test_helpers.initEntireDB();
 });
 
 test("blogs' length corresponds to the number of blogs in the database and the blogs are returned as json", async () => {
@@ -54,11 +37,13 @@ test("a new blog properly added to the database", async () => {
     likes: 0,
   };
 
-  const response = await api.post("/api/blogs").send(newBlog);
+  const token = mongo_helper.getValidToken();
+
+  const response = await api.post("/api/blogs").send(newBlog).set("Authorization", `bearer ${token}`);
 
   expect(response.body).toMatchObject(newBlog);
 
-  const afterBlogsLength = await getLengthOfBlogs();
+  const afterBlogsLength = await test_helpers.getLengthOfBlogs();
 
   expect(afterBlogsLength).toBe(blogs.length + 1);
 });
@@ -70,7 +55,9 @@ test("if the likes property is not present in the request, it will have the valu
     url: "https://github.com/octocat",
   };
 
-  const response = await api.post("/api/blogs").send(newBlog);
+  const token = mongo_helper.getValidToken();
+
+  const response = await api.post("/api/blogs").send(newBlog).set("Authorization", `bearer ${token}`);
 
   expect(response.body.likes).toBe(0);
 });
@@ -101,8 +88,11 @@ describe("testing deleting functionality", () => {
 
     const blogToDelete = blogsBefore.body[0];
 
+    const token = mongo_helper.getValidToken();
+
     await api
       .delete(`/api/blogs/${blogToDelete._id}`)
+      .set("Authorization", `bearer ${token}`)
       .expect(200)
       .expect(`Deleted blog with id ${blogToDelete._id}`);
 
@@ -116,8 +106,11 @@ describe("testing deleting functionality", () => {
 
     const malformattedId = "it_is_not_a_valid_id";
 
+    const token = mongo_helper.getValidToken();
+
     await api
       .delete(`/api/blogs/${malformattedId}`)
+      .set("Authorization", `bearer ${token}`)
       .expect(400)
       .expect({ error: "malformatted id" });
 
@@ -131,8 +124,11 @@ describe("testing deleting functionality", () => {
 
     const id = mongo_helper.randomObjectId();
 
+    const token = mongo_helper.getValidToken();
+
     await api
       .delete(`/api/blogs/${id}`)
+      .set("Authorization", `bearer ${token}`)
       .expect(404)
       .expect({ error: "blog not found" });
 
