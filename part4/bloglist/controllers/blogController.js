@@ -22,6 +22,41 @@ blogRouter.post("/", async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
+blogRouter.put("/:id", async (request, response) => {
+  const id = request.params.id;
+  const body = request.body;
+
+  if (!mongo_helper.isValidObjectId(id)) {
+    return response.status(400).json({
+      error: "malformatted id",
+    });
+  }
+
+  if (!body.title || !body.url) {
+    return response.status(400).json({
+      error: "title or url missing",
+    });
+  }
+
+  const newBlog = await Blog.findOneAndUpdate(
+    {
+      _id: id,
+    },
+    body,
+    {
+      new: true,
+    }
+  );
+
+  if (!newBlog) {
+    return response.status(404).json({
+      error: "blog not found",
+    });
+  }
+
+  response.send(newBlog);
+});
+
 blogRouter.delete("/:id", async (request, response) => {
   const id = request.params.id;
 

@@ -142,6 +142,136 @@ describe("testing deleting functionality", () => {
   });
 });
 
+describe("testing updating functionality", () => {
+  test("update a blog with a valid id", async () => {
+    const blogsBefore = await api.get("/api/blogs");
+
+    const blogToUpdate = blogsBefore.body[0];
+
+    const updatedBlog = {
+      title: blogToUpdate.title + " (updated)",
+      url: blogToUpdate.url,
+      author: blogToUpdate.author,
+      likes: Math.floor(Math.random() * 100),
+    };
+
+    await api
+      .put(`/api/blogs/${blogToUpdate._id}`)
+      .send(updatedBlog)
+      .expect(200);
+
+    const blogsAfter = await api.get("/api/blogs");
+
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
+
+    const updatedBlogFromDatabase = blogsAfter.body.find(
+      (blog) => blog._id === blogToUpdate._id
+    );
+
+    expect(updatedBlogFromDatabase).toMatchObject(updatedBlog);
+  });
+
+  describe("update a blog with missing title and url", () => {
+    test("missing title", async () => {
+      const blogsBefore = await api.get("/api/blogs");
+
+      const blogToUpdate = blogsBefore.body[0];
+
+      const updatedBlog = {
+        url: blogToUpdate.url + " (updated)",
+        author: blogToUpdate.author,
+        likes: Math.floor(Math.random() * 100),
+      };
+    });
+
+    test("missing url", async () => {
+      const blogsBefore = await api.get("/api/blogs");
+
+      const blogToUpdate = blogsBefore.body[0];
+
+      const updatedBlog = {
+        title: blogToUpdate.title + " (updated)",
+        author: blogToUpdate.author,
+        likes: Math.floor(Math.random() * 100),
+      };
+
+      await api
+        .put(`/api/blogs/${blogToUpdate._id}`)
+        .send(updatedBlog)
+        .expect(400);
+
+      const blogsAfter = await api.get("/api/blogs");
+
+      expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
+
+      const updatedBlogFromDatabase = blogsAfter.body.find(
+        (blog) => blog._id === blogToUpdate._id
+      );
+
+      expect(updatedBlogFromDatabase).toMatchObject(blogToUpdate);
+    });
+  });
+
+  test("update a blog with a valid id but not present in the database", async () => {
+    const blogsBefore = await api.get("/api/blogs");
+
+    const id = mongo_helper.randomObjectId();
+
+    const updatedBlog = {
+      title:
+        "Testing if a blog can be updated with a valid id but not present in the database",
+      author: "OctoCat",
+      url: "https://github.com/octocat",
+      likes: 0,
+    };
+
+    await api
+      .put(`/api/blogs/${id}`)
+      .send(updatedBlog)
+      .expect(404)
+      .expect({ error: "blog not found" });
+
+    const blogsAfter = await api.get("/api/blogs");
+
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
+
+    const updatedBlogFromDatabase = blogsAfter.body.find(
+      (blog) => blog._id === id
+    );
+
+    expect(updatedBlogFromDatabase).toBeUndefined();
+  });
+
+  test("update a blog with an invalid id", async () => {
+    const blogsBefore = await api.get("/api/blogs");
+
+    const malformattedId = "it_is_not_a_valid_id";
+
+    const updatedBlog = {
+      title: "Testing if a blog can be updated with an invalid id",
+      author: "OctoCat",
+      url: "https://github.com/octocat",
+      likes: 0,
+    };
+
+    await api
+      .put(`/api/blogs/${malformattedId}`)
+      .send(updatedBlog)
+      .expect(400)
+      .expect({ error: "malformatted id" });
+
+    const blogsAfter = await api.get("/api/blogs");
+
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
+
+    const updatedBlogFromDatabase = blogsAfter.body.find(
+      (blog) => blog._id === malformattedId
+    );
+
+    expect(updatedBlogFromDatabase).toBeUndefined();
+  });
+});
+
 afterAll(async () => {
   await moongoose.connection.close();
 });
