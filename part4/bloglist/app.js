@@ -2,14 +2,20 @@ const config = require("./utils/config");
 const express = require("express");
 const app = express();
 const cors = require("cors");
+// ! Import express-async-errors before other routes
+require("express-async-errors");
 const blogRouter = require("./controllers/blogController");
 const userRouter = require("./controllers/userController");
 const mongoose = require("mongoose");
-require("express-async-errors");
+const middleware = require("./utils/middleware");
 
 console.log("connecting to", config.MONGODB_URI);
 
-mongoose.set("debug", true);
+if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
+  mongoose.set("debug", true);
+}
+
+mongoose.set("strictQuery", true);
 
 mongoose
   .connect(config.MONGODB_URI, config.mongoose_config)
@@ -25,5 +31,7 @@ app.use(express.json());
 
 app.use("/api/blogs", blogRouter);
 app.use("/api/users", userRouter);
+
+app.use(middleware.errorHandler);
 
 module.exports = app;

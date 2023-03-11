@@ -3,10 +3,15 @@ const bcrypt = require("bcrypt");
 const userRouter = require("express").Router();
 const { saltRounds } = require("../utils/config");
 const default_users = require("../tests/default_users");
-require("express-async-errors");
 
 userRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
+
+  if (!password || password.length < 3) {
+    return response.status(400).json({
+      error: "password must be at least 3 characters long",
+    });
+  }
 
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
