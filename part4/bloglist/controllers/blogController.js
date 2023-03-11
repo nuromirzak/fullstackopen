@@ -6,16 +6,6 @@ const config = require("../utils/config");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-const extractToken = (request) => {
-  const authorization = request.get("authorization");
-
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    return authorization.substring(7);
-  }
-
-  return null;
-};
-
 blogRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({});
 
@@ -29,7 +19,7 @@ blogRouter.post("/", async (request, response) => {
     });
   }
 
-  const token = extractToken(request);
+  const token = request.token;
 
   if (!token) {
     return response.status(401).json({
@@ -96,7 +86,13 @@ blogRouter.put("/:id", async (request, response) => {
 });
 
 blogRouter.delete("/:id", async (request, response) => {
-  const id = request.params.id;
+  const id = request.params.id, user = request.user;
+
+  if (!user) {
+    return response.status(401).json({
+      error: "token missing",
+    });
+  }
 
   if (!mongo_helper.isValidObjectId(id)) {
     return response.status(400).json({
@@ -104,13 +100,21 @@ blogRouter.delete("/:id", async (request, response) => {
     });
   }
 
-  const res = await Blog.findByIdAndDelete(id);
+  const blogToDelete = await Blog.findById(id);
 
-  if (!res) {
+  if (!blogToDelete) {
     return response.status(404).json({
       error: "blog not found",
     });
   }
+
+  if (blogToDelete.user.toString() !== user.id) {
+    return response.status(403).json({
+      error: "user not authorized to delete blog",
+    });
+  }
+
+  const res = await Blog.findByIdAndDelete(id);
 
   response.send(`Deleted blog with id ${id}`);
 });
