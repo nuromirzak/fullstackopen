@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const PORT = process.env.PORT || 3003;
+const JWT_SECRET = process.env.JWT_SECRET || "JWT_SECRET";
 
 switch (process.env.NODE_ENV) {
   case "test":
@@ -26,4 +27,5 @@ module.exports = {
   PORT,
   mongoose_config,
   saltRounds,
+  JWT_SECRET
 };

@@ -2,6 +2,19 @@ const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
 const mongo_helper = require("../utils/mongo_helper");
 const default_blogs = require("../tests/default_blogs");
+const config = require("../utils/config");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+
+const extractToken = (request) => {
+  const authorization = request.get("authorization");
+
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    return authorization.substring(7);
+  }
+
+  return null;
+};
 
 blogRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({});
@@ -16,9 +29,33 @@ blogRouter.post("/", async (request, response) => {
     });
   }
 
-  const blog = new Blog(request.body);
+  const token = extractToken(request);
+
+  if (!token) {
+    return response.status(401).json({
+      error: "token missing",
+    });
+  }
+
+  const decodedToken = jwt.verify(token, config.JWT_SECRET);
+
+  if (!decodedToken.id) {
+    return response.status(401).json({
+      error: "token invalid",
+    });
+  }
+
+  const user = await User.findById(decodedToken.id);
+
+  const blog = new Blog({
+    ...request.body,
+    user: user._id,
+  });
 
   const savedBlog = await blog.save();
+
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
 
   response.status(201).json(savedBlog);
 });
