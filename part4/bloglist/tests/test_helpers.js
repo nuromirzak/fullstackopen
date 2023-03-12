@@ -1,7 +1,6 @@
 const Blog = require("../models/blog");
-const blogs = require("./default_blogs");
 const User = require("../models/user");
-const users = require("./default_users");
+const { users, blogs } = require("../utils/seed_data");
 
 async function getLengthOfBlogs() {
   return await Blog.countDocuments({});

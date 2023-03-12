@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const default_users = require("../tests/default_users");
+const { users } = require("../utils/seed_data");
 const jwt = require("jsonwebtoken");
 const config = require("./config");
 
@@ -13,8 +13,8 @@ const randomObjectId = () => {
 
 const getValidToken = () => {
   const userForToken = {
-    username: default_users[0].username,
-    id: default_users[0]._id,
+    username: users[0].username,
+    id: users[0]._id,
   };
 
   return jwt.sign(userForToken, config.JWT_SECRET);

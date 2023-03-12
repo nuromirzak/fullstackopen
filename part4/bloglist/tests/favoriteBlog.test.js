@@ -1,5 +1,5 @@
 const listHelper = require("../utils/list_helper");
-const blogs = require("./default_blogs");
+const blogs = require("../utils/seed_data").blogs;
 
 describe("favorite blog", () => {
   test("finding the blog with most likes", () => {

@@ -1,7 +1,7 @@
 const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
 const mongo_helper = require("../utils/mongo_helper");
-const default_blogs = require("../tests/default_blogs");
+const { blogs } = require("../utils/seed_data");
 const config = require("../utils/config");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
@@ -86,7 +86,8 @@ blogRouter.put("/:id", async (request, response) => {
 });
 
 blogRouter.delete("/:id", async (request, response) => {
-  const id = request.params.id, user = request.user;
+  const id = request.params.id,
+    user = request.user;
 
   if (!user) {
     return response.status(401).json({
@@ -122,7 +123,7 @@ blogRouter.delete("/:id", async (request, response) => {
 blogRouter.get("/init", async (request, response) => {
   await Blog.deleteMany({});
 
-  for (let blog of default_blogs) {
+  for (let blog of blogs) {
     const newBlog = new Blog(blog);
     await newBlog.save();
   }

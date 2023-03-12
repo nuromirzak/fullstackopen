@@ -18,6 +18,10 @@
       at log (app.js:26:13)
 ```
 
+- Also, this problem was solved by putting all the tests in a single file, and using `beforeAll` and `afterAll` to connect and disconnect from the database, but I don't know if this is the best solution. Any suggestions?
+
 ## If tests run individually, they pass, but if they run together (`npm test`), they fail
 
 - I think it is because of the concurrent nature of the tests, but I don't know how to fix it
+
+- I solved this by putting all the tests in a single file, and using `beforeAll` and `afterAll` to connect and disconnect from the database, but I don't know if this is the best solution. Any suggestions?

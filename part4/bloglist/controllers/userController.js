@@ -2,7 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const userRouter = require("express").Router();
 const { saltRounds } = require("../utils/config");
-const default_users = require("../tests/default_users");
+const { users } = require("../utils/seed_data");
 
 userRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
@@ -32,15 +32,15 @@ userRouter.get("/", async (request, response) => {
 });
 
 userRouter.get("/init", async (request, response) => {
-    await User.deleteMany({});
+  await User.deleteMany({});
 
-    const users = default_users.map((user) => new User(user));
+  const users = users.map((user) => new User(user));
 
-    for (let user of users) {
-      await user.save();
-    }
+  for (let user of users) {
+    await user.save();
+  }
 
-    response.send("Users initialized");
+  response.send("Users initialized");
 });
 
 module.exports = userRouter;

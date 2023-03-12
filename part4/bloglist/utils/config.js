@@ -17,15 +17,11 @@ switch (process.env.NODE_ENV) {
     process.env.MONGODB_URI = "mongodb://localhost/bloglist";
 }
 
-const mongoose_config = {
-};
-
 const saltRounds = 10;
     
 module.exports = {
   MONGODB_URI: process.env.MONGODB_URI,
   PORT,
-  mongoose_config,
   saltRounds,
   JWT_SECRET
 };
