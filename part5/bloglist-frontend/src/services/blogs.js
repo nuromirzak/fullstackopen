@@ -12,7 +12,7 @@ const getAll = async () => {
     const user = users.find((user) => user.id === blog.user);
     return {
       ...blog,
-      user: user.name,
+      username: user.username,
     };
   });
 
@@ -34,5 +34,25 @@ const create = async ({ title, author, url }, token) => {
   return response.data;
 };
 
+const update = async (id, blog) => {
+  const request = axios.put(`${baseUrl}/${id}`, blog);
+
+  const response = await request;
+
+  return response.data;
+};
+
+const deleteBlog = async (id, token) => {
+  const request = axios.delete(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const response = await request;
+
+  return response.data;
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create };
+export default { getAll, create, update, deleteBlog };

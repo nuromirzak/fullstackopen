@@ -10,10 +10,11 @@ import Notification from "./components/Notification";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({
-    message: null,
-    cssClass: null,
-  });
+  // const [notification, setNotification] = useState({
+  //   message: null,
+  //   cssClass: null,
+  // });
+  const [notificationsStack, setNotificationsStack] = useState([]);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -61,25 +62,66 @@ const App = () => {
     }
   };
 
+  const handleBlogUpdate = async (id, blog) => {
+    try {
+      const updatedBlog = await blogService.update(id, blog);
+      setBlogs(blogs.map((blog) => (blog.id === id ? updatedBlog : blog)));
+      flashMessage(
+        `Successfully updated blog: ${updatedBlog.title}`,
+        "success"
+      );
+      console.log("Successfully updated blog: ", updatedBlog);
+    } catch (error) {
+      console.log("Error updating blog: ", error);
+      flashMessage(error.response.data.error, "danger");
+    }
+  };
+
+  const handleBlogDelete = async (id) => {
+    const blogToDelete = blogs.find((blog) => blog.id === id);
+    if (
+      window.confirm(
+        `Are you sure you want to delete this blog with name ${blogToDelete.title}?`
+      )
+    ) {
+      try {
+        const deletedBlog = await blogService.deleteBlog(id, user.token);
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+        flashMessage(
+          `Successfully deleted blog: ${blogToDelete.title}`,
+          "success"
+        );
+        console.log("Successfully deleted blog: ", deletedBlog);
+      } catch (error) {
+        console.log("Error deleting blog: ", error);
+        flashMessage(error.response.data.error, "danger");
+      }
+    } else {
+      console.log("User cancelled blog deletion");
+    }
+  };
+
   const flashMessage = (message, cssClass, duration = 5000) => {
-    setNotification({
-      message,
-      cssClass,
-    });
+    setNotificationsStack((prevNotificationsStack) => [
+      ...prevNotificationsStack,
+      { message, cssClass },
+    ]);
     setTimeout(() => {
-      setNotification({
-        message: null,
-        cssClass: null,
-      });
+      setNotificationsStack((prevNotificationsStack) =>
+        prevNotificationsStack.slice(1)
+      );
     }, duration);
   };
 
   return (
     <>
-      <Notification
-        message={notification.message}
-        cssClass={notification.cssClass}
-      />
+      {notificationsStack.map((notification, index) => (
+        <Notification
+          key={index}
+          message={notification.message}
+          cssClass={notification.cssClass}
+        />
+      ))}
 
       {user === null ? (
         <LoginForm handleLogin={handleLogin} />
@@ -95,9 +137,16 @@ const App = () => {
 
           <h2>blogs</h2>
 
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateBlog={handleBlogUpdate}
+                deleteBlog={handleBlogDelete}
+              />
+            ))}
         </div>
       )}
     </>
