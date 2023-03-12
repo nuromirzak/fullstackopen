@@ -31,6 +31,7 @@ const blogs = [
     title: "Clean Agile",
     author: "Robert Martin",
     url: "https://www.amazon.com/Clean-Agile-Back-End-Development-Principles/dp/0135974445",
+    user: "640ca8a3d94c03face2359d1",
     likes: 3,
     __v: 0,
   },

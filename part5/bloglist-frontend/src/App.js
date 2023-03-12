@@ -53,6 +53,7 @@ const App = () => {
         `Successfully created blog: ${createdBlog.title}`,
         "success"
       );
+      createdBlog.user = user.name;
       console.log("Successfully created blog: ", createdBlog);
     } catch (error) {
       console.log("Error creating blog: ", error);

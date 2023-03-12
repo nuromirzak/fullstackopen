@@ -4,7 +4,20 @@ const baseUrl = "/api/blogs";
 const getAll = async () => {
   const request = axios.get(baseUrl);
   const response = await request;
-  return response.data;
+
+  const allUsers = await axios.get("/api/users");
+  const users = allUsers.data;
+
+  const blogs = response.data.map((blog) => {
+    const user = users.find((user) => user.id === blog.user);
+    return {
+      ...blog,
+      user: user.name,
+    };
+  });
+
+  // return response.data;
+  return blogs;
 };
 
 const create = async ({ title, author, url }, token) => {
