@@ -1,13 +1,18 @@
-import "../index.css";
+import '../index.css'
+import PropTypes from 'prop-types'
 
 const Notification = (props) => {
-  const { message, cssClass } = props;
+  const { message, cssClass } = props
 
   if (!message) {
-    return null;
+    return null
   }
 
-  return <div className={"notification " + cssClass}>{message}</div>;
-};
+  return <div className={'notification ' + cssClass}>{message}</div>
+}
 
-export default Notification;
+Notification.propTypes = {
+  message: PropTypes.string,
+}
+
+export default Notification
