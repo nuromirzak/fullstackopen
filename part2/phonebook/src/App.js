@@ -85,6 +85,9 @@ const App = () => {
         console.log(error);
         flashMessage(`Unkown error ${error.message}`, "danger", 5000);
       });
+
+    setNewNumber("");
+    setNewName("");
   };
 
   const askToDelete = (name) => {
@@ -116,7 +119,7 @@ const App = () => {
         setPersons(initialPersons);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data);
       });
   }, []);
 

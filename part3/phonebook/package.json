@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "build": "npm install && npm run build:ui",
     "dev": "nodemon index.js",
+    "build:ui": "rm -rf build && cd ../../part2/phonebook/ && npm install && npm run build && cd ../../part3/phonebook/ && cp -r ../../part2/phonebook/build .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nurmukhammed Omirzak",
@@ -14,6 +16,7 @@
     "nodemon": "^2.0.21"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "morgan": "^1.10.0"

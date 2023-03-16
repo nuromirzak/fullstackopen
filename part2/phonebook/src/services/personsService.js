@@ -1,23 +1,24 @@
 import axios from "axios";
+const personsUrl = "/api/persons";
 
 const addPhoneNumber = phone => {
-    const promise = axios.post("http://localhost:3001/persons", phone);
+    const promise = axios.post(personsUrl, phone);
     return promise.then(response => response.data);
 };
 
 const getAll = () => {
-    const promise = axios.get("http://localhost:3001/persons");
-    return promise.then(response => response.data);
+  const promise = axios.get(personsUrl);
+  return promise.then((response) => response.data);
 };
 
 const update = (id, newObject) => {
-    const promise = axios.put(`http://localhost:3001/persons/${id}`, newObject);
-    return promise.then(response => response.data);
+  const promise = axios.put(`${personsUrl}/${id}`, newObject);
+  return promise.then((response) => response.data);
 };
 
-const deletePhoneNumber = id => {
-    const promise = axios.delete(`http://localhost:3001/persons/${id}`);
-    return promise.then(response => response.data);
+const deletePhoneNumber = (id) => {
+  const promise = axios.delete(`${personsUrl}/${id}`);
+  return promise.then((response) => response.data);
 };
 
 const service = { addPhoneNumber, getAll, update, deletePhoneNumber };
