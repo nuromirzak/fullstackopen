@@ -137,10 +137,10 @@ describe("testing Blog API", () => {
       expect(response.body).toHaveLength(blogs.length);
     });
 
-    test("the unique identifier property of the blog posts is named _id", async () => {
+    test("the unique identifier property of the blog posts is named id", async () => {
       const response = await api.get("/api/blogs");
 
-      const ids = response.body.map((blog) => blog._id);
+      const ids = response.body.map((blog) => blog.id);
 
       for (let id of ids) {
         expect(id).toBeDefined();
@@ -218,10 +218,10 @@ describe("testing Blog API", () => {
       const token = mongo_helper.getValidToken();
 
       await api
-        .delete(`/api/blogs/${blogToDelete._id}`)
+        .delete(`/api/blogs/${blogToDelete.id}`)
         .set("Authorization", `bearer ${token}`)
         .expect(200)
-        .expect(`Deleted blog with id ${blogToDelete._id}`);
+        .expect(`Deleted blog with id ${blogToDelete.id}`);
 
       const blogsAfter = await api.get("/api/blogs");
 
@@ -231,7 +231,7 @@ describe("testing Blog API", () => {
     test("delete a blog with an invalid id", async () => {
       const blogsBefore = await api.get("/api/blogs");
 
-      const malformattedId = "it_is_not_a_valid_id";
+      const malformattedId = "it_is_not_a_validid";
 
       const token = mongo_helper.getValidToken();
 
@@ -279,7 +279,7 @@ describe("testing Blog API", () => {
       };
 
       await api
-        .put(`/api/blogs/${blogToUpdate._id}`)
+        .put(`/api/blogs/${blogToUpdate.id}`)
         .send(updatedBlog)
         .expect(200);
 
@@ -288,7 +288,7 @@ describe("testing Blog API", () => {
       expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
 
       const updatedBlogFromDatabase = blogsAfter.body.find(
-        (blog) => blog._id === blogToUpdate._id
+        (blog) => blog.id === blogToUpdate.id
       );
 
       expect(updatedBlogFromDatabase).toMatchObject(updatedBlog);
@@ -319,7 +319,7 @@ describe("testing Blog API", () => {
         };
 
         await api
-          .put(`/api/blogs/${blogToUpdate._id}`)
+          .put(`/api/blogs/${blogToUpdate.id}`)
           .send(updatedBlog)
           .expect(400);
 
@@ -328,7 +328,7 @@ describe("testing Blog API", () => {
         expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
 
         const updatedBlogFromDatabase = blogsAfter.body.find(
-          (blog) => blog._id === blogToUpdate._id
+          (blog) => blog.id === blogToUpdate.id
         );
 
         expect(updatedBlogFromDatabase).toMatchObject(blogToUpdate);
@@ -359,7 +359,7 @@ describe("testing Blog API", () => {
       expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
 
       const updatedBlogFromDatabase = blogsAfter.body.find(
-        (blog) => blog._id === id
+        (blog) => blog.id === id
       );
 
       expect(updatedBlogFromDatabase).toBeUndefined();
@@ -368,7 +368,7 @@ describe("testing Blog API", () => {
     test("update a blog with an invalid id", async () => {
       const blogsBefore = await api.get("/api/blogs");
 
-      const malformattedId = "it_is_not_a_valid_id";
+      const malformattedId = "it_is_not_a_validid";
 
       const updatedBlog = {
         title: "Testing if a blog can be updated with an invalid id",
@@ -388,7 +388,7 @@ describe("testing Blog API", () => {
       expect(blogsAfter.body).toHaveLength(blogsBefore.body.length);
 
       const updatedBlogFromDatabase = blogsAfter.body.find(
-        (blog) => blog._id === malformattedId
+        (blog) => blog.id === malformattedId
       );
 
       expect(updatedBlogFromDatabase).toBeUndefined();
