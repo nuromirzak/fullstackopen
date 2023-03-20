@@ -1,7 +1,6 @@
 const personsController = require("express").Router();
 const sample_data = require("../utils/sample_data");
 const Person = require("../models/person");
-const mongoose = require("mongoose");
 
 personsController.get("/", async (req, res) => {
   const persons = await Person.find({});
@@ -20,10 +19,6 @@ personsController.get("/init", async (req, res) => {
 
 personsController.get("/:id", async (req, res) => {
   const id = req.params.id;
-
-  if (!isValidObjectId(id)) {
-    return res.status(400).send({ error: "Malformed id" });
-  }
 
   const person = await Person.findById(id);
 
@@ -61,10 +56,6 @@ personsController.put("/:id", async (req, res) => {
     return res.status(400).send({ error: "Name or number missing" });
   }
 
-  if (!isValidObjectId(id)) {
-    return res.status(400).send({ error: "Malformed id" });
-  }
-
   const person = await Person.findById(id);
 
   if (!person) {
@@ -82,17 +73,9 @@ personsController.put("/:id", async (req, res) => {
 personsController.delete("/:id", async (req, res) => {
   const id = req.params.id;
 
-  if (!isValidObjectId(id)) {
-    return res.status(400).send({ error: "Malformed id" });
-  }
-
   const deletedPerson = await Person.findByIdAndDelete(id);
 
   res.status(204).send(deletedPerson);
 });
-
-const isValidObjectId = (id) => {
-  return mongoose.Types.ObjectId.isValid(id);
-};
 
 module.exports = personsController;
