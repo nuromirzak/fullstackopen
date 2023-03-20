@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const sample_data = require("./utils/sample_data");
 const middlewares = require("./utils/middlewares");
+const mongo_connection = require("./mongo_connection");
 
 const personsController = require("./controllers/personsController");
 
