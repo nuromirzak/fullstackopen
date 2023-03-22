@@ -56,16 +56,12 @@ personsController.put("/:id", async (req, res) => {
     return res.status(400).send({ error: "Name or number missing" });
   }
 
-  const person = await Person.findById(id);
-
-  if (!person) {
-    return res.status(404).send({ error: `Person with id ${id} not found` });
-  }
-
-  person.name = name;
-  person.number = number;
-
-  await person.save();
+  const updatedPerson = { name, number };
+  const person = await Person.findByIdAndUpdate(id, updatedPerson, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  });
 
   res.status(200).send(person);
 });

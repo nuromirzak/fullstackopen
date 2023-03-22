@@ -55,8 +55,8 @@ const App = () => {
         flashMessage(`Added ${newName}`, "success", 5000);
       })
       .catch((error) => {
-        console.log(error);
-        flashMessage(`Unkown error ${error.message}`, "danger", 5000);
+        console.log(error.response);
+        flashMessage(`Unkown error ${error.response.data.error}`, "danger", 5000);
       });
 
     setNewNumber("");
@@ -82,7 +82,7 @@ const App = () => {
         flashMessage(`Updated ${newName}`, "success", 5000);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response);
         flashMessage(`Unkown error ${error.message}`, "danger", 5000);
       });
 
@@ -101,7 +101,7 @@ const App = () => {
           flashMessage(`Deleted ${name}`, "success", 5000);
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.response);
           flashMessage(
             `Information of ${name} has already been removed`,
             "danger",
