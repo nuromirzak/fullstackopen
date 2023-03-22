@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "NODE_ENV=production node index.js",
     "build": "npm install && npm run build:ui",
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../../part2/phonebook/ && npm install && npm run build && cd ../../part3/phonebook/ && cp -r ../../part2/phonebook/build .",

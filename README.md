@@ -31,6 +31,6 @@
 
 ## Todo
 
-- [ ] 2.20\*: Data for countries, step3
+- [x] 2.20\*: Data for countries, step3
 - [ ] 4.6\*: helper functions and unit tests, step4
 - [ ] 4.7\*: helper functions and unit tests, step5
