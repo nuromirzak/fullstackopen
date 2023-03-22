@@ -43,7 +43,11 @@ const CountryList = (props) => {
   } else if (countries.length === 1) {
     const country = countries[0];
 
-    return <CountryCard country={country} />;
+    return (
+      <div>
+        <CountryCard country={country} />
+      </div>
+    );
   }
 };
 
