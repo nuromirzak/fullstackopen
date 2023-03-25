@@ -23,4 +23,14 @@ const notificationSlice = createSlice({
 });
 
 export const { setNotification, removeNotification } = notificationSlice.actions;
+
+export const flashNotification = (notification, duration) => {
+    return async (dispatch) => {
+        dispatch(setNotification(notification));
+        setTimeout(() => {
+            dispatch(removeNotification());
+        }, duration);
+    };
+};
+
 export default notificationSlice.reducer;
