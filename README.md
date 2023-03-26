@@ -20,8 +20,8 @@
 | Part 3    | 13/03/2023 | 19/03/2023 | ✅      | 22/03/2023 |
 | Part 4    | 13/03/2023 | 19/03/2023 | ✅      | 11/03/2023 |
 | Part 5    | 20/03/2023 | 26/03/2023 | 🚧      |            |
-| Part 6    | 27/03/2023 | 02/04/2023 |         |            |
-| Part 7    | 03/04/2023 | 09/04/2023 |         |            |
+| Part 6    | 27/03/2023 | 02/04/2023 | ✅      | 26/03/2023 |
+| Part 7    | 03/04/2023 | 09/04/2023 | 🚧      |            |
 | Part 8    | 10/04/2023 | 16/04/2023 |         |            |
 | Part 9    | 17/04/2023 | 23/04/2023 |         |            |
 | Part 10   | 24/04/2023 | 30/04/2023 |         |            |
@@ -32,5 +32,5 @@
 ## Todo
 
 - [x] 2.20\*: Data for countries, step3
-- [ ] 4.6\*: helper functions and unit tests, step4
-- [ ] 4.7\*: helper functions and unit tests, step5
+- [x] 4.6\*: helper functions and unit tests, step4
+- [x] 4.7\*: helper functions and unit tests, step5
