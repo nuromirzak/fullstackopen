@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "@apollo/server": "^4.5.0",
+    "graphql": "^16.6.0"
+  },
+  "name": "library-backend",
+  "version": "1.0.0",
+  "main": "library-backend.js",
+  "devDependencies": {},
+  "scripts": {
+    "server": "node library-backend.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": ""
+}
