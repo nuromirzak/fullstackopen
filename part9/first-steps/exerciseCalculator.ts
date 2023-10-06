@@ -9,6 +9,7 @@ interface Result {
 }
 
 const parseArguments = function(args: Array<string>): ExerciseValues {
+    console.log('args', args);
     if (args.length < 4) throw new Error('Not enough arguments');
     
     for (let i = 2; i < args.length; i++) {
@@ -22,7 +23,7 @@ const parseArguments = function(args: Array<string>): ExerciseValues {
         days,
         target
     };
-}
+};
 
 interface ExerciseValues {
     days: Array<number>;
@@ -46,7 +47,9 @@ const calculateExercises = function(exerciseValues:ExerciseValues): Result {
         target,
         average
     };
-}
+};
 
-const exerciseValues = parseArguments(process.argv);
-console.log(calculateExercises(exerciseValues));
+// const exerciseValues = parseArguments(process.argv);
+// console.log(calculateExercises(exerciseValues));
+
+export { parseArguments, calculateExercises };

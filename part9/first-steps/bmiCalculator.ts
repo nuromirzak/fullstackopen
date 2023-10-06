@@ -1,4 +1,4 @@
-const calculateBmi = function(height: number, weight: number): string {
+export default function calculateBmi(height: number, weight: number): string {
     const heightInMeters: number = height / 100;
     const bmiIndex = weight / Math.pow(heightInMeters, 2);
     console.log(`BMI index: ${bmiIndex}`);
