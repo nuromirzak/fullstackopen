@@ -1,8 +1,14 @@
 import patientsData from '../../data/patients';
+import { v1 as uuid } from 'uuid';
 
-import { NonSensitivePatient, Patient } from '../types';
+import { NonSensitivePatient, Patient, Gender, isGender, isNewPatient } from '../types';
 
-const patients: Array<Patient> = patientsData;
+const patients: Array<Patient> = patientsData.filter(patient =>
+    isGender(patient.gender))
+    .map(patient => ({
+        ...patient,
+        gender: patient.gender === 'male' ? Gender.Male : Gender.Female,
+    }));
 
 const getNonSensitiveEntries = (): NonSensitivePatient[] => {
     return patients.map((patient) => ({
@@ -14,7 +20,24 @@ const getNonSensitiveEntries = (): NonSensitivePatient[] => {
     }));
 };
 
+const addPatient = (entry: unknown): Patient => {
+    if (!isNewPatient(entry)) {
+        throw new Error('Invalid entry: Entry does not conform to NewPatient type');
+    }
+
+    const id: string = uuid();
+    const newPatientEntry: Patient = {
+        ...entry,
+        id
+    };
+
+    patients.push(newPatientEntry);
+    return newPatientEntry;
+};
+
+
 export default {
     getNonSensitiveEntries,
+    addPatient,
 };
 
