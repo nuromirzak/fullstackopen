@@ -6,7 +6,7 @@ function App() {
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
   const [newDiary, setNewDiary] = useState<NewDiaryEntry>({
     date: "",
-    visibility: Visibility.Good,
+    visibility: Visibility.Great,
     weather: Weather.Sunny,
     comment: ""
   } as NewDiaryEntry);
@@ -22,15 +22,6 @@ function App() {
     event.preventDefault();
     console.log("Add diary: ", newDiary);
     try {
-      // axios.post<DiaryEntry>("http://localhost:3000/api/diaries", newDiary).then((response) => {
-      //   setDiaries(diaries.concat(response.data));
-      //   setNewDiary({
-      //     date: "",
-      //     visibility: Visibility.Good,
-      //     weather: Weather.Sunny,
-      //     comment: ""
-      //   } as NewDiaryEntry);
-      // })
       const { data: addedDiary } = await axios.post<DiaryEntry>("http://localhost:3000/api/diaries", newDiary);
       setDiaries(diaries.concat(addedDiary));
     } catch (error) {
@@ -50,9 +41,23 @@ function App() {
       <h1>Add Diary</h1>
       {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
       <form onSubmit={addDiary}>
-        <input type="text" placeholder="Date" value={newDiary.date} onChange={(e) => setNewDiary({ ...newDiary, date: e.target.value })} />
-        <input type="text" placeholder="Visibility" value={newDiary.visibility} onChange={(e) => setNewDiary({ ...newDiary, visibility: e.target.value as Visibility })} />
-        <input type="text" placeholder="Weather" value={newDiary.weather} onChange={(e) => setNewDiary({ ...newDiary, weather: e.target.value as Weather })} />
+        <input type="date" value={newDiary.date} onChange={(e) => setNewDiary({ ...newDiary, date: e.target.value })} />
+        <div>
+          {Object.values(Visibility).map((vis) => (
+            <label key={vis}>
+              <input type="radio" name="visibility" value={vis} checked={newDiary.visibility === vis} onChange={() => setNewDiary({ ...newDiary, visibility: vis })} />
+              {vis}
+            </label>
+          ))}
+        </div>
+        <div>
+          {Object.values(Weather).map((weather) => (
+            <label key={weather}>
+              <input type="radio" name="weather" value={weather} checked={newDiary.weather === weather} onChange={() => setNewDiary({ ...newDiary, weather: weather })} />
+              {weather}
+            </label>
+          ))}
+        </div>
         <input type="text" placeholder="Comment" value={newDiary.comment} onChange={(e) => setNewDiary({ ...newDiary, comment: e.target.value })} />
         <button type="submit">Add Diary</button>
       </form>
@@ -65,7 +70,7 @@ function App() {
         </div>
       ))}
     </>
-  )
+  );
 }
 
 export default App
