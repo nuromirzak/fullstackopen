@@ -8,6 +8,7 @@ const patients: Array<Patient> = patientsData.filter(patient =>
     .map(patient => ({
         ...patient,
         gender: patient.gender === 'male' ? Gender.Male : Gender.Female,
+        entries: []
     }));
 
 const getNonSensitiveEntries = (): NonSensitivePatient[] => {
@@ -35,9 +36,15 @@ const addPatient = (entry: unknown): Patient => {
     return newPatientEntry;
 };
 
+const getPatient = (id: string): Patient | undefined => {
+    const patient = patients.find(patient => patient.id === id);
+    return patient;
+};
+
 
 export default {
     getNonSensitiveEntries,
     addPatient,
+    getPatient
 };
 
