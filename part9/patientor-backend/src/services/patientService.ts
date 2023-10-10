@@ -1,15 +1,10 @@
 import patientsData from '../../data/patients';
 import { v1 as uuid } from 'uuid';
 
-import { NonSensitivePatient, Patient, Gender, isGender, isNewPatient } from '../types';
+import { NonSensitivePatient, Patient, isGender, isNewPatient } from '../types';
 
 const patients: Array<Patient> = patientsData.filter(patient =>
-    isGender(patient.gender))
-    .map(patient => ({
-        ...patient,
-        gender: patient.gender === 'male' ? Gender.Male : Gender.Female,
-        entries: []
-    }));
+    isGender(patient.gender));
 
 const getNonSensitiveEntries = (): NonSensitivePatient[] => {
     return patients.map((patient) => ({

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
+import EntryComponent from "../Entry";
 
 const getIcon = function (gender: Gender) {
     switch (gender) {
@@ -61,6 +62,16 @@ const PatientProfile = () => {
             <Typography>
                 occupation: {patient.occupation}
             </Typography>
+            <Typography variant="h4">
+                entries
+            </Typography>
+            <ol>
+                {patient.entries?.map((entry) => (
+                    <li key={entry.id} style={{ border: '1px solid black', padding: '10px', margin: '5px' }}>
+                        <EntryComponent entry={entry} />
+                    </li>
+                ))}
+            </ol>
         </div>
     );
 };
