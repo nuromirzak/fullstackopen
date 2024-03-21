@@ -2,6 +2,5 @@
 
 ## Git commit conventions
 
-- `feat: done exercise a.b.c`
-
-- `feat: done exercises a.b.c - d.e.f`
+- `feat: done a.b.c`
+- `feat: done a.b.c - d.e.f`
