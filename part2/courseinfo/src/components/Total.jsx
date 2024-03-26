@@ -4,7 +4,7 @@ function Total(props) {
     }
 
     return (
-        <p>Number of exercises {calculateSum()}</p>
+        <b>Number of exercises {calculateSum()}</b>
     )
 }
 
