@@ -1,7 +1,6 @@
 import { Part } from "./Part"
 
 function Content(props) {
-    console.log(props)
     return (
         <div>
             {
