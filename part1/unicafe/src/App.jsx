@@ -32,6 +32,10 @@ function App() {
 }
 
 const Statistics = ({ good, neutral, bad }) => {
+  function hasFeedback() {
+    return good + neutral + bad > 0;
+  }
+
   function calculateSum() {
     return good + neutral + bad;
   }
@@ -48,12 +52,20 @@ const Statistics = ({ good, neutral, bad }) => {
     <>
       <h1>statistics</h1>
 
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
-      <div>all {calculateSum()}</div>
-      <div>average {calculateAverage()}</div>
-      <div>positive {calculatePositive()} %</div>
+      {
+        hasFeedback() ? (
+          <>
+            <div>good {good}</div>
+            <div>neutral {neutral}</div>
+            <div>bad {bad}</div>
+            <div>all {calculateSum()}</div>
+            <div>average {calculateAverage()}</div>
+            <div>positive {calculatePositive()} %</div>
+          </>
+        ) : (
+          <div>No feedback given</div>
+        )
+      }
     </>
   );
 }
