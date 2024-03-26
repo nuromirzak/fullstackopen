@@ -58,14 +58,16 @@ const Statistics = ({ good, neutral, bad }) => {
 
       {
         hasFeedback() ? (
-          <>
-            <StatisticLine text="good" value={good} />
-            <StatisticLine text="neutral" value={neutral} />
-            <StatisticLine text="bad" value={bad} />
-            <StatisticLine text="all" value={calculateSum()} />
-            <StatisticLine text="average" value={calculateAverage()} />
-            <StatisticLine text="positive" value={`${calculatePositive()} %`} />
-          </>
+          <table>
+            <tbody>
+              <StatisticLine text="good" value={good} />
+              <StatisticLine text="neutral" value={neutral} />
+              <StatisticLine text="bad" value={bad} />
+              <StatisticLine text="all" value={calculateSum()} />
+              <StatisticLine text="average" value={calculateAverage()} />
+              <StatisticLine text="positive" value={`${calculatePositive()} %`} />
+            </tbody>
+          </table>
         ) : (
           <div>No feedback given</div>
         )
@@ -75,7 +77,10 @@ const Statistics = ({ good, neutral, bad }) => {
 }
 
 const StatisticLine = ({ text, value }) => (
-  <div>{text} {value}</div>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 );
 
 export { App };
