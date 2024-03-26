@@ -21,15 +21,19 @@ function App() {
     <>
       <h1>give feedback</h1>
       <div style={{ display: 'flex' }}>
-        <button onClick={onGoodClick}>good</button>
-        <button onClick={onNeutralClick}>neutral</button>
-        <button onClick={onBadClick}>bad</button>
+        <Button onClick={onGoodClick} text="good" />
+        <Button onClick={onNeutralClick} text="neutral" />
+        <Button onClick={onBadClick} text="bad" />
       </div>
 
       <Statistics good={good} neutral={neutral} bad={bad} />
     </>
   );
 }
+
+const Button = ({ onClick, text }) => (
+  <button onClick={onClick}>{text}</button>
+);
 
 const Statistics = ({ good, neutral, bad }) => {
   function hasFeedback() {
@@ -55,12 +59,12 @@ const Statistics = ({ good, neutral, bad }) => {
       {
         hasFeedback() ? (
           <>
-            <div>good {good}</div>
-            <div>neutral {neutral}</div>
-            <div>bad {bad}</div>
-            <div>all {calculateSum()}</div>
-            <div>average {calculateAverage()}</div>
-            <div>positive {calculatePositive()} %</div>
+            <StatisticLine text="good" value={good} />
+            <StatisticLine text="neutral" value={neutral} />
+            <StatisticLine text="bad" value={bad} />
+            <StatisticLine text="all" value={calculateSum()} />
+            <StatisticLine text="average" value={calculateAverage()} />
+            <StatisticLine text="positive" value={`${calculatePositive()} %`} />
           </>
         ) : (
           <div>No feedback given</div>
@@ -69,5 +73,9 @@ const Statistics = ({ good, neutral, bad }) => {
     </>
   );
 }
+
+const StatisticLine = ({ text, value }) => (
+  <div>{text} {value}</div>
+);
 
 export { App };
