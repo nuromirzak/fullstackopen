@@ -26,14 +26,34 @@ function App() {
         <button onClick={onBadClick}>bad</button>
       </div>
 
+      <Statistics good={good} neutral={neutral} bad={bad} />
+    </>
+  );
+}
+
+const Statistics = ({ good, neutral, bad }) => {
+  function calculateSum() {
+    return good + neutral + bad;
+  }
+
+  function calculateAverage() {
+    return (good - bad) / calculateSum();
+  }
+
+  function calculatePositive() {
+    return good / calculateSum() * 100;
+  }
+
+  return (
+    <>
       <h1>statistics</h1>
 
       <div>good {good}</div>
       <div>neutral {neutral}</div>
       <div>bad {bad}</div>
-      <div>all {good + neutral + bad}</div>
-      <div>average {(good - bad) / (good + neutral + bad)}</div>
-      <div>positive {good / (good + neutral + bad) * 100} %</div>
+      <div>all {calculateSum()}</div>
+      <div>average {calculateAverage()}</div>
+      <div>positive {calculatePositive()} %</div>
     </>
   );
 }
