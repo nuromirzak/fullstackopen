@@ -26,7 +26,7 @@ const PersonForm = ({ newName, setNewName, newNumber, setNewNumber, handleSubmit
   )
 }
 
-const Persons = ({ persons, search }) => {
+const Persons = ({ persons, search, handleDelete }) => {
   const personsToShow = (search) => {
     if (search === '') {
       return persons
@@ -38,7 +38,14 @@ const Persons = ({ persons, search }) => {
   return (
     <div>
       {
-        personsToShow(search).map(person => <p key={person.name}>{person.name} {person.number}</p>)
+        personsToShow(search).map(person => {
+          return (
+            <div key={person.id}>
+              {person.name} {person.number}
+              <button onClick={() => handleDelete(person.id)}>delete</button>
+            </div>
+          )
+        })
       }
     </div>
   )
@@ -59,19 +66,45 @@ const App = () => {
       })
   }, [])
 
+  const handleDelete = (id) => {
+    const person = persons.find(person => person.id === id)
+    const confirm = window.confirm(`Delete ${person.name}?`)
+
+    if (!confirm) {
+      return
+    }
+
+    peopleService
+      .deletePerson(id)
+      .then((response) => {
+        console.log('delete response', response)
+        setPersons(persons.filter(person => person.id !== id))
+      })
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    const nameExists = persons.some(person => person.name === newName)
-
-    if (nameExists) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
+    const foundPerson = persons.find(person => person.name === newName)
 
     const personObject = {
       name: newName,
       number: newNumber
+    }
+
+    if (foundPerson) {
+      const confirm = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)
+      if (confirm) {
+        peopleService
+          .update(foundPerson.id, personObject)
+          .then(returnedPerson => {
+            console.log('returnedPerson', returnedPerson)
+            setPersons(persons.map(person => person.id !== foundPerson.id ? person : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+      return
     }
 
     peopleService
@@ -91,7 +124,7 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleSubmit={handleSubmit} />
       <h2>Numbers</h2>
-      <Persons persons={persons} search={search} />
+      <Persons persons={persons} search={search} handleDelete={handleDelete} />
     </div>
   )
 }
