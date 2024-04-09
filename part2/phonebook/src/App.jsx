@@ -56,6 +56,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     peopleService
@@ -80,6 +82,14 @@ const App = () => {
         console.log('delete response', response)
         setPersons(persons.filter(person => person.id !== id))
       })
+      .catch(error => {
+        console.log('error', error)
+        setErrorMessage(`Information of ${person.name} has already been removed from server`)
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 2500)
+      })
   }
 
   const handleSubmit = (e) => {
@@ -102,6 +112,20 @@ const App = () => {
             setPersons(persons.map(person => person.id !== foundPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
+
+            setMessage(`Updated ${returnedPerson.name}`)
+
+            setTimeout(() => {
+              setMessage(null)
+            }, 2500)
+          })
+          .catch(error => {
+            console.log('error', error)
+            setErrorMessage(`Information of ${newName} has already been removed from server`)
+
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 2500)
           })
       }
       return
@@ -114,12 +138,34 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+
+        setMessage(`Added ${returnedPerson.name}`)
+
+        setTimeout(() => {
+          setMessage(null)
+        }, 2500)
       })
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      {message && <div style={{
+        color: 'green',
+        background: 'lightgrey',
+        fontSize: 20,
+        borderStyle: 'solid',
+        borderRadius: 5,
+        padding: 10
+      }}>{message}</div>}
+      {errorMessage && <div style={{
+        color: 'red',
+        background: 'lightgrey',
+        fontSize: 20,
+        borderStyle: 'solid',
+        borderRadius: 5,
+        padding: 10
+      }}>{errorMessage}</div>}
       <Filter search={search} setSearch={setSearch} />
       <h3>Add a new</h3>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleSubmit={handleSubmit} />
