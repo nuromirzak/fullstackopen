@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for phonebook-backend-nur on 2024-04-27T21:52:58+05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'phonebook-backend-nur'
+primary_region = 'waw'
+
+[build]
+
+[env]
+  PORT = 8888
+
+[http_service]
+  internal_port = 8888
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'
