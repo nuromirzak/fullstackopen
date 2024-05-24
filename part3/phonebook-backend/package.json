@@ -6,7 +6,7 @@
   "scripts": {
     "build:ui": "rm -rf dist && cd ../../part2/phonebook && npm run build && cp -r dist ../../part3/phonebook-backend",
     "deploy": "fly deploy",
-    "deploy:full": "npm run build:ui && npm run deploy",    
+    "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs",
     "start": "node app.js",
     "dev": "nodemon app.js",
@@ -17,10 +17,13 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "mongoose": "^8.4.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.5.6",
-    "nodemon": "^3.1.0"
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5"
   }
 }
