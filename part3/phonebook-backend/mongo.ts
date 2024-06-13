@@ -13,7 +13,7 @@ const url = `mongodb+srv://nuromirzaq:${password}@cluster0.2ai7e2u.mongodb.net/?
 mongoose.set("strictQuery", true);
 
 mongoose.connect(url)
-    .then((response) => {
+    .then(() => {
         console.log('connected to MongoDB');
     });
 
