@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const personSchema = new mongoose.Schema({
   name: {
@@ -10,39 +10,39 @@ const personSchema = new mongoose.Schema({
     minlength: 8,
     validate: {
       validator: (v) => {
-        const parts = v.split("-");
+        const parts = v.split('-')
 
         if (parts.length !== 2) {
-          return false;
+          return false
         }
 
-        const [firstPart, secondPart] = parts;
+        const [firstPart, secondPart] = parts
 
         if (!(firstPart.length === 2 || firstPart.length === 3)) {
-          return false;
+          return false
         }
 
         const isNumeric = (str) => {
-          return /^\d+$/.test(str);
-        };
-
-        if (!isNumeric(firstPart) || !isNumeric(secondPart)) {
-          return false;
+          return /^\d+$/.test(str)
         }
 
-        return true;
+        if (!isNumeric(firstPart) || !isNumeric(secondPart)) {
+          return false
+        }
+
+        return true
       },
       message: (props) => `${props.value} is not a valid phone number!`,
     },
   },
-});
+})
 
-personSchema.set("toJSON", {
+personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
   },
-});
+})
 
-module.exports = mongoose.model("Person", personSchema);
+module.exports = mongoose.model('Person', personSchema)
