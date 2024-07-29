@@ -105,3 +105,46 @@ test("blog without title is not added", async () => {
 
   assert.strictEqual(blogsAtEnd.length, initialBlogs.length);
 });
+
+test("unique identifier property of the blog posts is named id", async () => {
+  const response = await api.get("/api/blogs");
+
+  console.log(response.body[0]);
+
+  assert.ok(response.body[0].id);
+  assert.ifError(response.body[0]._id);
+});
+
+test("a blog without likes property defaults to 0", async () => {
+  const newBlog = {
+    title: "CSS is hard",
+    author: "John Doe",
+    url: "https://www.example.com",
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await blogsInDb();
+
+  const addedBlog = blogsAtEnd.find((blog) => blog.title === "CSS is hard");
+
+  assert.strictEqual(addedBlog.likes, 0);
+});
+
+test("a blog without url is not added", async () => {
+  const newBlog = {
+    title: "CSS is hard",
+    author: "John Doe",
+    likes: 0,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogsAtEnd = await blogsInDb();
+
+  assert.strictEqual(blogsAtEnd.length, initialBlogs.length);
+});
