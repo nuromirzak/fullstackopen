@@ -23,9 +23,14 @@ const initialBlogs = [
 ];
 
 const nonExistingId = async () => {
-  const blog = new Blog({ title: "willremovethissoon", author: "John Doe" });
+  const blog = new Blog({
+    title: "willremovethissoon",
+    author: "John Doe",
+    url: "https://www.example.com",
+    likes: 0,
+  });
   await blog.save();
-  await blog.remove();
+  await blog.deleteOne();
 
   return blog._id.toString();
 };
@@ -147,4 +152,38 @@ test("a blog without url is not added", async () => {
   const blogsAtEnd = await blogsInDb();
 
   assert.strictEqual(blogsAtEnd.length, initialBlogs.length);
+});
+
+test("a blog can be deleted", async () => {
+  const blogsAtStart = await blogsInDb();
+  const blogToDelete = blogsAtStart[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const blogsAtEnd = await blogsInDb();
+
+  assert.strictEqual(blogsAtEnd.length, initialBlogs.length - 1);
+
+  const titles = blogsAtEnd.map((r) => r.title);
+
+  assert.ok(!titles.includes(blogToDelete.title));
+});
+
+test("a blog can be updated", async () => {
+  const blogsAtStart = await blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+
+  const updatedBlog = { ...blogToUpdate, likes: 100 };
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await blogsInDb();
+
+  const processedBlog = blogsAtEnd.find((blog) => blog.id === blogToUpdate.id);
+
+  assert.strictEqual(processedBlog.likes, 100);
 });
