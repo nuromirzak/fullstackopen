@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  test-db:
+    image: mongo:7.0.5-jammy
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nur_user
+      MONGO_INITDB_ROOT_PASSWORD: nur_password
+      MONGO_INITDB_DATABASE: nur_db
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
