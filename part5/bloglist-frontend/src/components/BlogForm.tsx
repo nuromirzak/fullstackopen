@@ -1,7 +1,8 @@
 import { useState } from "react";
 import React from "react";
+import PropTypes from 'prop-types'
 
-export function BlogForm({ onBlogCreate }) {
+function BlogForm({ onBlogCreate }) {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
@@ -51,3 +52,9 @@ export function BlogForm({ onBlogCreate }) {
         </div>
     );
 }
+
+BlogForm.propTypes = {
+    onBlogCreate: PropTypes.func.isRequired
+}
+
+export { BlogForm }

@@ -1,20 +1,21 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
-  const [visible, setVisible] = useState(false);
-  const showWhenVisible = { display: visible ? '' : 'none' };
+  const [visible, setVisible] = useState(false)
+  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
   }
 
   const increaseLikes = () => {
-    console.log("blog", blog)
+    console.log('blog', blog)
     const updatedBlog = ({
       ...blog,
       likes: blog.likes + 1
     })
-    console.log("updatedBlog", updatedBlog)
+    console.log('updatedBlog', updatedBlog)
     updateBlog(updatedBlog)
   }
 
@@ -32,7 +33,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     marginBottom: 5
   }
 
-  const buttonLabel = visible ? 'hide' : 'view';
+  const buttonLabel = visible ? 'hide' : 'view'
 
   return (
     <div style={blogStyle}>
@@ -47,6 +48,12 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired
 }
 
 export default Blog

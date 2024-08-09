@@ -69,7 +69,7 @@ const App = () => {
         <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} updateBlog={updateBlog} />
       ))}
     </div>
-  );
+  )
 }
 
 export default App
