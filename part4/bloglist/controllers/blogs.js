@@ -22,33 +22,48 @@ blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
     user: user._id,
   });
   const savedBlog = await blog.save();
+  const populatedBlog = await savedBlog.populate("user", {
+    username: 1,
+    name: 1,
+  });
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
-  response.status(201).json(savedBlog);
+  response.status(201).json(populatedBlog);
 });
 
-blogsRouter.delete("/:id", middleware.userExtractor, async (request, response) => {
+blogsRouter.delete(
+  "/:id",
+  middleware.userExtractor,
+  async (request, response) => {
+    const user = request.user;
+    const blog = await Blog.findById(request.params.id);
+    if (blog.user.toString() === user._id.toString()) {
+      await Blog.findByIdAndDelete({ _id: request.params.id });
+      response.status(204).end();
+    } else {
+      response.status(401).json({ error: "unauthorized" });
+    }
+  }
+);
+
+blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
   const user = request.user;
   const blog = await Blog.findById(request.params.id);
-  if (blog.user.toString() === user._id.toString()) {
-    await Blog.findByIdAndDelete({ _id: request.params.id });
-    response.status(204).end();
-  } else {
-    response.status(401).json({ error: "unauthorized" });
+  if (blog.user.toString() !== user._id.toString()) {
+    return response.status(401).json({ error: "unauthorized" });
   }
-});
 
-blogsRouter.put("/:id", async (request, response) => {
-  const blog = {
+  const newBlog = {
     title: request.body.title,
     author: request.body.author,
     url: request.body.url,
     likes: request.body.likes || 0,
+    user: user._id,
   };
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, newBlog, {
     new: true,
-  });
+  }).populate("user", { username: 1, name: 1 });
 
   response.json(updatedBlog);
 });

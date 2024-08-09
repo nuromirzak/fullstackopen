@@ -1,8 +1,7 @@
 import { useState } from "react";
-import blogsService from "../services/blogs";
 import React from "react";
 
-export function BlogForm({ setBlogs }) {
+export function BlogForm({ onBlogCreate }) {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
@@ -10,8 +9,7 @@ export function BlogForm({ setBlogs }) {
     const handleSubmit = async (event) => {
         event.preventDefault()
         const newBlog = { title, author, url }
-        const data = await blogsService.create(newBlog)
-        setBlogs((prevBlogs) => [...prevBlogs, data])
+        await onBlogCreate(newBlog)
         setTitle('')
         setAuthor('')
         setUrl('')
