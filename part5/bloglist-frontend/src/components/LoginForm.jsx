@@ -31,7 +31,7 @@ function LoginForm({ setUser, notification, setNotification }) {
         <input
           type="text"
           value={username}
-          name="Username"
+          name="username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
@@ -40,7 +40,7 @@ function LoginForm({ setUser, notification, setNotification }) {
         <input
           type="password"
           value={password}
-          name="Password"
+          name="password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
