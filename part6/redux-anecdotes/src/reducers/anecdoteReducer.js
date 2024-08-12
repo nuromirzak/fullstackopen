@@ -19,10 +19,8 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  console.log("state now: ", state);
-  console.log("action", action);
-
+export const anecdotesReducer = (state = initialState, action) => {
+  console.log("anecdotesReducer action", action);
   if (action.type === "VOTE") {
     const { id } = action.payload;
     const anecdoteToChange = state.find((n) => n.id === id);
@@ -39,6 +37,15 @@ const reducer = (state = initialState, action) => {
 
   return state;
 };
+export const filterReducer = (state = "", action) => {
+  console.log("filterReducer action", action);
+  switch (action.type) {
+    case "SET_FILTER":
+      return action.payload;
+    default:
+      return state;
+  }
+};
 
 export const vote = (id) => {
   return {
@@ -54,4 +61,9 @@ export const createAnecdote = (content) => {
   };
 };
 
-export default reducer;
+export const filterChange = (filter) => {
+  return {
+    type: "SET_FILTER",
+    payload: filter,
+  };
+};

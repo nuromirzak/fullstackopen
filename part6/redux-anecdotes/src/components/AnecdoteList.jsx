@@ -3,7 +3,9 @@ import { vote } from "../reducers/anecdoteReducer";
 import { Anecdote } from "./Anecdote";
 
 export const AnecdoteList = () => {
-    const anecdotes = useSelector((state) => state);
+    const anecdotes = useSelector(({ anecdotes, filter }) => {
+        return anecdotes.filter(anecdote => anecdote.content.includes(filter));
+    });
     const dispatch = useDispatch();
 
     const voteHandler = (id) => {
@@ -11,6 +13,7 @@ export const AnecdoteList = () => {
     };
 
     const sortAnecdotes = (anecdotes) => {
+        console.log("sortAnecdotes", anecdotes);
         return anecdotes.sort((a, b) => b.votes - a.votes);
     };
 
