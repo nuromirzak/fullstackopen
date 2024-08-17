@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { vote } from "../reducers/anecdoteReducer";
+import { setNotification } from "../reducers/notificationReducer";
 import { Anecdote } from "./Anecdote";
 
 export const AnecdoteList = () => {
@@ -10,10 +11,13 @@ export const AnecdoteList = () => {
 
     const voteHandler = (id) => {
         dispatch(vote(id));
+        dispatch(setNotification(`You created '${event.target.note.value}'`));
+        setTimeout(() => {
+            dispatch(setNotification(""));
+        }, 2500);
     };
 
     const sortAnecdotes = (anecdotes) => {
-        console.log("sortAnecdotes", anecdotes);
         return anecdotes.sort((a, b) => b.votes - a.votes);
     };
 

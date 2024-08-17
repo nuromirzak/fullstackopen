@@ -1,4 +1,4 @@
-import { filterChange } from "../reducers/anecdoteReducer";
+import { filterChange } from "../reducers/filterReducer";
 import { useDispatch } from "react-redux";
 
 export const Filter = () => {

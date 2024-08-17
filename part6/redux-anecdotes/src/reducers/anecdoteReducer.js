@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -19,51 +21,26 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-export const anecdotesReducer = (state = initialState, action) => {
-  console.log("anecdotesReducer action", action);
-  if (action.type === "VOTE") {
-    const { id } = action.payload;
-    const anecdoteToChange = state.find((n) => n.id === id);
-    const changedAnecdote = {
-      ...anecdoteToChange,
-      votes: anecdoteToChange.votes + 1,
-    };
-    return state.map((anecdote) =>
-      anecdote.id !== id ? anecdote : changedAnecdote
-    );
-  } else if (action.type === "NEW_ANECDOTE") {
-    return [...state, asObject(action.payload.content)];
-  }
+const anecdoteSlice = createSlice({
+  name: "anecdotes",
+  initialState,
+  reducers: {
+    vote(state, action) {
+      console.log("vote action", action);
+      const id = action.payload;
+      const anecdoteToChange = state.find((n) => n.id === id);
+      if (!anecdoteToChange) {
+        console.warn(`Anecdote with id ${id} not found`);
+        return;
+      }
+      anecdoteToChange.votes += 1;
+    },
+    createAnecdote(state, action) {
+      console.log("createAnecdote action", action);
+      state.push(asObject(action.payload));
+    },
+  },
+});
 
-  return state;
-};
-export const filterReducer = (state = "", action) => {
-  console.log("filterReducer action", action);
-  switch (action.type) {
-    case "SET_FILTER":
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-export const vote = (id) => {
-  return {
-    type: "VOTE",
-    payload: { id },
-  };
-};
-
-export const createAnecdote = (content) => {
-  return {
-    type: "NEW_ANECDOTE",
-    payload: { content },
-  };
-};
-
-export const filterChange = (filter) => {
-  return {
-    type: "SET_FILTER",
-    payload: filter,
-  };
-};
+export const { vote, createAnecdote } = anecdoteSlice.actions;
+export const anecdotesReducer = anecdoteSlice.reducer;
