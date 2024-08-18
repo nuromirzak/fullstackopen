@@ -2,8 +2,11 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { useContext, useEffect } from "react"
+import { NotificationContext } from "./NotificationContext"
 
 const App = () => {
+  const { pushNotification } = useContext(NotificationContext)
   const queryClient = useQueryClient();
 
   const {
@@ -25,8 +28,13 @@ const App = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries('anecdotes')
+      pushNotification('Anecdote updated successfully')
     },
   });
+
+  useEffect(() => {
+    pushNotification('Welcome to the anecdote app')
+  }, [pushNotification]);
 
   const handleVote = (anecdote) => {
     updateAnecdote.mutate({

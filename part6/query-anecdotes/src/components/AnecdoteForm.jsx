@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { useContext } from "react"
+import { NotificationContext } from "../NotificationContext"
 
 const AnecdoteForm = () => {
+  const { pushNotification } = useContext(NotificationContext)
   const queryClient = useQueryClient()
 
   const createAnecdote = useMutation({
@@ -11,7 +14,15 @@ const AnecdoteForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries('anecdotes')
+      pushNotification('Anecdote created successfully')
     },
+    onError: (error) => {
+      let message = 'Failed to create anecdote'
+      if (error.response && error.response.data && error.response.data.error) {
+        message = error.response.data.error
+      }
+      pushNotification(message)
+    }
   })
 
   const onCreate = (event) => {
