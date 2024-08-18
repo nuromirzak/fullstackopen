@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getAll, createNew, update } from "../services/anecdotes";
+import { setNotificationAction } from "./notificationReducer";
 
 const anecdoteSlice = createSlice({
   name: "anecdotes",
@@ -25,5 +27,33 @@ const anecdoteSlice = createSlice({
   },
 });
 
-export const { vote, createAnecdote, setAnecdotes } = anecdoteSlice.actions;
+const { vote, createAnecdote, setAnecdotes } = anecdoteSlice.actions;
 export const anecdotesReducer = anecdoteSlice.reducer;
+
+export const initializeAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await getAll();
+    dispatch(setAnecdotes(anecdotes));
+  };
+};
+
+export const voteForAnecdote = (anecdote) => {
+  return async (dispatch) => {
+    const updatedAnecdote = await update(anecdote.id, {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    });
+    dispatch(vote(updatedAnecdote.id));
+    dispatch(
+      setNotificationAction(`You voted for '${updatedAnecdote.content}'`)
+    );
+  };
+};
+
+export const createAnecdoteAction = (content) => {
+  return async (dispatch) => {
+    const newAnecdote = await createNew(content);
+    dispatch(createAnecdote(newAnecdote));
+    dispatch(setNotificationAction(`You created '${content}'`));
+  };
+};

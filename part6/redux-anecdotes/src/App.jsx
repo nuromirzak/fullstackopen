@@ -4,15 +4,14 @@ import { AnecdoteList } from './components/AnecdoteList'
 import { Filter } from './components/Filter'
 import { Notification } from './components/Notification'
 import { useDispatch } from 'react-redux'
-import { getAll } from './services/anecdotes'
-import { setAnecdotes } from './reducers/anecdoteReducer'
+import { initializeAnecdotes } from './reducers/anecdoteReducer'
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('App component mounted')
-    getAll().then(anecdotes => dispatch(setAnecdotes(anecdotes)));
+    console.log('App component mounted');
+    dispatch(initializeAnecdotes());
   }, [dispatch]);
 
   return (
@@ -26,4 +25,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

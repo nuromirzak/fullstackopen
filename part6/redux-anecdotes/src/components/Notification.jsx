@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 
 export const Notification = () => {
   const notification = useSelector((state) => state.notification);
-  console.log("notification", notification);
   if (Boolean(notification) === false) {
     return;
   }
